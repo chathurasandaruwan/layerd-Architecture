@@ -93,17 +93,22 @@ public class ItemDAOImpl implements ItemDAO {
         }
         return null;
     }
-    public boolean newUpdateItem(Connection connection, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+    public boolean newUpdateItem(Connection connection, List<OrderDetailDTO> orderDetails) throws SQLException {
         for (OrderDetailDTO orderDetail : orderDetails) {
-            ItemDTO item = findItem(orderDetail.getItemCode());
-            item.setQtyOnHand(item.getQtyOnHand() - orderDetail.getQty());
+            if(!updateQty(connection,orderDetail)) {
+                return false;
+            }
+        }return true;
+    }
+    public boolean updateQty(Connection connection, OrderDetailDTO orderDetail) throws SQLException {
+        ItemDTO item = findItem(orderDetail.getItemCode());
+        item.setQtyOnHand(item.getQtyOnHand() - orderDetail.getQty());
 
-            PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
-            pstm.setString(1, item.getDescription());
-            pstm.setBigDecimal(2, item.getUnitPrice());
-            pstm.setInt(3, item.getQtyOnHand());
-            pstm.setString(4, item.getCode());
-            return pstm.executeUpdate()>0;
-        }return false;
+        PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
+        pstm.setString(1, item.getDescription());
+        pstm.setBigDecimal(2, item.getUnitPrice());
+        pstm.setInt(3, item.getQtyOnHand());
+        pstm.setString(4, item.getCode());
+        return pstm.executeUpdate()>0;
     }
 }

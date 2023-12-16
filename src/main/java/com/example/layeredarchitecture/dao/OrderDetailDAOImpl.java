@@ -9,15 +9,19 @@ import java.util.List;
 
 public class OrderDetailDAOImpl {
     public boolean saveOrderDetail(Connection connection, List<OrderDetailDTO> orderDetails, PreparedStatement stm,String orderId) throws SQLException {
-        stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
-
         for (OrderDetailDTO detail : orderDetails) {
-            stm.setString(1, orderId);
-            stm.setString(2, detail.getItemCode());
-            stm.setBigDecimal(3, detail.getUnitPrice());
-            stm.setInt(4, detail.getQty());
-            return stm.executeUpdate() == 1;
+            if(!saveOD(connection,stm,orderId,detail)) {
+                return false;
+            }
         }
-        return false;
+        return true;
+    }
+    public boolean saveOD(Connection connection,PreparedStatement stm,String orderId,OrderDetailDTO detail) throws SQLException {
+        stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
+        stm.setString(1, orderId);
+        stm.setString(2, detail.getItemCode());
+        stm.setBigDecimal(3, detail.getUnitPrice());
+        stm.setInt(4, detail.getQty());
+        return stm.executeUpdate() == 1;
     }
 }

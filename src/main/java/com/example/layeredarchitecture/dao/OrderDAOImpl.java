@@ -27,30 +27,20 @@ public class OrderDAOImpl {
             /*if not order id already exist*/
             if (!(stm.executeQuery().next())) {
                 boolean isSavedOrder = saveNewOrder(connection,stm,orderId,orderDate,customerId);
-
-                if (!(isSavedOrder)) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
+                //save Order
+                if (isSavedOrder) {
+                    //save order detail
+                    boolean isSavedOD = orderDetailDAO.saveOrderDetail(connection,orderDetails,stm,orderId);
+                    if (isSavedOD) {
+                        //Search & Update Item
+                        boolean isItemUpdate = itemDAO.newUpdateItem(connection, orderDetails);
+                        if (!(isItemUpdate)) {
+                            connection.rollback();
+                            connection.setAutoCommit(true);
+                            return false;
+                        }
+                    }
                 }
-                //save order detail
-                boolean isSavedOD = orderDetailDAO.saveOrderDetail(connection,orderDetails,stm,orderId);
-
-                if (!(isSavedOD)) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-
-                //Search & Update Item
-                boolean isItemUpdate = itemDAO.newUpdateItem(connection, orderDetails);
-
-                if (!(isItemUpdate)) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-
             }
             connection.commit();
             connection.setAutoCommit(true);

@@ -1,7 +1,6 @@
 package com.example.layeredarchitecture.controller;
 
 import com.example.layeredarchitecture.dao.*;
-import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
@@ -55,7 +54,7 @@ public class PlaceOrderFormController {
     private OrderDAOImpl orderDAO = new OrderDAOImpl();
     private OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
 
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize() {
 
         tblOrderDetails.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblOrderDetails.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -308,59 +307,6 @@ public class PlaceOrderFormController {
         /*Transaction*/
         try {
            return orderDAO.saveOrder(orderId,orderDate,customerId,orderDetails);
-
-        /*Connection connection = null;
-        try {
-            connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement stm = connection.prepareStatement("SELECT oid FROM `Orders` WHERE oid=?");
-            stm.setString(1, orderId);
-            *//*if order id already exist*//*
-            if (stm.executeQuery().next()) {
-
-            }
-
-            connection.setAutoCommit(false);
-            stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
-            stm.setString(1, orderId);
-            stm.setDate(2, Date.valueOf(orderDate));
-            stm.setString(3, customerId);
-
-            if (stm.executeUpdate() != 1) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-                return false;
-            }
-
-            stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
-
-            for (OrderDetailDTO detail : orderDetails) {
-                stm.setString(1, orderId);
-                stm.setString(2, detail.getItemCode());
-                stm.setBigDecimal(3, detail.getUnitPrice());
-                stm.setInt(4, detail.getQty());
-
-                if (stm.executeUpdate() != 1) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-            }
-
-                //Search & Update Item
-            boolean isItemUpdate=itemDAO.newUpdateItem(connection,orderDetails);
-
-                if (!(isItemUpdate)) {
-                    connection.rollback();
-                    connection.setAutoCommit(true);
-                    return false;
-                }
-
-
-
-
-            connection.commit();
-            connection.setAutoCommit(true);
-            return true;*/
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
