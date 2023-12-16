@@ -7,17 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public interface ItemDAO {
-    public ArrayList<ItemDTO> getAllItem() throws SQLException, ClassNotFoundException;
+    ArrayList<ItemDTO> getAllItem() throws SQLException, ClassNotFoundException;
 
-    public boolean saveItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
+    boolean saveItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
 
-    public void updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
+    void updateItem(ItemDTO dto) throws SQLException, ClassNotFoundException;
 
-    public boolean existItem(String code) throws SQLException, ClassNotFoundException;
+    boolean existItem(String code) throws SQLException, ClassNotFoundException;
 
-    public String generateNextItemCode() throws SQLException, ClassNotFoundException;
+    String generateNextItemCode() throws SQLException, ClassNotFoundException;
 
-    public void deleteItem(String code) throws SQLException, ClassNotFoundException;
+    void deleteItem(String code) throws SQLException, ClassNotFoundException;
 
-    public ItemDTO searchItem(String newItemCode) throws SQLException, ClassNotFoundException;
+    ItemDTO searchItem(String newItemCode) throws SQLException, ClassNotFoundException;
+
+    ItemDTO findItem(String code) ;
 }

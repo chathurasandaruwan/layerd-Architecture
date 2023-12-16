@@ -2,9 +2,11 @@ package com.example.layeredarchitecture.dao;
 
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.ItemDTO;
+import com.example.layeredarchitecture.model.OrderDetailDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemDAOImpl implements ItemDAO {
     @Override
@@ -73,5 +75,35 @@ public class ItemDAOImpl implements ItemDAO {
         ResultSet rst = pstm.executeQuery();
         rst.next();
         return new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+    }
+
+    @Override
+    public ItemDTO findItem(String code)  {
+        try {
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+            pstm.setString(1, code);
+            ResultSet rst = pstm.executeQuery();
+            rst.next();
+            return new ItemDTO(code, rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find the Item " + code, e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public boolean newUpdateItem(Connection connection, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+        for (OrderDetailDTO orderDetail : orderDetails) {
+            ItemDTO item = findItem(orderDetail.getItemCode());
+            item.setQtyOnHand(item.getQtyOnHand() - orderDetail.getQty());
+
+            PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
+            pstm.setString(1, item.getDescription());
+            pstm.setBigDecimal(2, item.getUnitPrice());
+            pstm.setInt(3, item.getQtyOnHand());
+            pstm.setString(4, item.getCode());
+            return pstm.executeUpdate()>0;
+        }return false;
     }
 }
