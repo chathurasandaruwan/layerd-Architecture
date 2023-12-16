@@ -49,10 +49,9 @@ public class PlaceOrderFormController {
     public Label lblDate;
     public Label lblTotal;
     private String orderId;
-    private CustomerDAO customerDAO = new CustomerDAOImpl();
-    private ItemDAOImpl itemDAO = new ItemDAOImpl();
-    private OrderDAOImpl orderDAO = new OrderDAOImpl();
-    private OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
+    CustomerDAO customerDAO = new CustomerDAOImpl();
+    ItemDAO itemDAO = new ItemDAOImpl();
+    OrderDAO orderDAO = new OrderDAOImpl();
 
     public void initialize() {
 
@@ -166,7 +165,6 @@ public class PlaceOrderFormController {
             }
 
         });
-
         loadAllCustomerIds();
         loadAllItemCodes();
     }
@@ -307,7 +305,6 @@ public class PlaceOrderFormController {
         /*Transaction*/
         try {
            return orderDAO.saveOrder(orderId,orderDate,customerId,orderDetails);
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {

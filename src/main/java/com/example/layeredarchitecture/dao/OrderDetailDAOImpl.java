@@ -7,7 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class OrderDetailDAOImpl {
+public class OrderDetailDAOImpl implements OrderDetailDAO{
+    @Override
     public boolean saveOrderDetail(Connection connection, List<OrderDetailDTO> orderDetails, PreparedStatement stm,String orderId) throws SQLException {
         for (OrderDetailDTO detail : orderDetails) {
             if(!saveOD(connection,stm,orderId,detail)) {
@@ -16,6 +17,7 @@ public class OrderDetailDAOImpl {
         }
         return true;
     }
+    @Override
     public boolean saveOD(Connection connection,PreparedStatement stm,String orderId,OrderDetailDTO detail) throws SQLException {
         stm = connection.prepareStatement("INSERT INTO OrderDetails (oid, itemCode, unitPrice, qty) VALUES (?,?,?,?)");
         stm.setString(1, orderId);

@@ -76,7 +76,6 @@ public class ItemDAOImpl implements ItemDAO {
         rst.next();
         return new ItemDTO(newItemCode + "", rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
     }
-
     @Override
     public ItemDTO findItem(String code)  {
         try {
@@ -93,6 +92,7 @@ public class ItemDAOImpl implements ItemDAO {
         }
         return null;
     }
+    @Override
     public boolean newUpdateItem(Connection connection, List<OrderDetailDTO> orderDetails) throws SQLException {
         for (OrderDetailDTO orderDetail : orderDetails) {
             if(!updateQty(connection,orderDetail)) {
@@ -100,6 +100,7 @@ public class ItemDAOImpl implements ItemDAO {
             }
         }return true;
     }
+    @Override
     public boolean updateQty(Connection connection, OrderDetailDTO orderDetail) throws SQLException {
         ItemDTO item = findItem(orderDetail.getItemCode());
         item.setQtyOnHand(item.getQtyOnHand() - orderDetail.getQty());
