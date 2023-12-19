@@ -1,6 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
 import com.example.layeredarchitecture.dao.*;
+import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
@@ -52,6 +53,7 @@ public class PlaceOrderFormController {
     CustomerDAO customerDAO = new CustomerDAOImpl();
     ItemDAO itemDAO = new ItemDAOImpl();
     OrderDAO orderDAO = new OrderDAOImpl();
+    OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
 
     public void initialize() {
 
@@ -303,8 +305,33 @@ public class PlaceOrderFormController {
 
     public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
         /*Transaction*/
+      Connection connection = null;
         try {
-           return orderDAO.saveOrder(orderId,orderDate,customerId,orderDetails);
+            connection = DBConnection.getDbConnection().getConnection();
+            connection.setAutoCommit(false);
+            //if not order id already exist
+            boolean isOrderExist = orderDAO.existOrderId(orderId);
+            if (!(isOrderExist)) {
+                boolean isSavedOrder = orderDAO.saveNewOrder(orderId, orderDate, customerId);
+                //save Order
+                if (isSavedOrder) {
+                    //save order detail
+                    boolean isSavedOD = orderDetailDAO.saveOrderDetail(orderDetails, orderId);
+                    if (isSavedOD) {
+                        //Search & Update Item
+                        boolean isItemUpdate = itemDAO.newUpdateItem(orderDetails);
+                        if (!(isItemUpdate)) {
+                            connection.rollback();
+                            connection.setAutoCommit(true);
+                            return false;
+                        }
+                    }
+                }
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {

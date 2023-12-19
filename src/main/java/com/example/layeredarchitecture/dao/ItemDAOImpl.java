@@ -93,15 +93,17 @@ public class ItemDAOImpl implements ItemDAO {
         return null;
     }
     @Override
-    public boolean newUpdateItem(Connection connection, List<OrderDetailDTO> orderDetails) throws SQLException {
+    public boolean newUpdateItem( List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
         for (OrderDetailDTO orderDetail : orderDetails) {
-            if(!updateQty(connection,orderDetail)) {
+            if(!updateQty(orderDetail)) {
                 return false;
             }
         }return true;
     }
     @Override
-    public boolean updateQty(Connection connection, OrderDetailDTO orderDetail) throws SQLException {
+    public boolean updateQty( OrderDetailDTO orderDetail) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
         ItemDTO item = findItem(orderDetail.getItemCode());
         item.setQtyOnHand(item.getQtyOnHand() - orderDetail.getQty());
 
