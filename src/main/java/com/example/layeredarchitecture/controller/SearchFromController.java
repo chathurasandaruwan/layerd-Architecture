@@ -2,9 +2,7 @@ package com.example.layeredarchitecture.controller;
 
 import com.example.layeredarchitecture.dao.custom.QueryDAO;
 import com.example.layeredarchitecture.dao.custom.impl.QueryDAOImpl;
-import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.SearchOrderDTO;
-import com.example.layeredarchitecture.view.tdm.CustomerTM;
 import com.example.layeredarchitecture.view.tdm.SearchOrderTM;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -61,11 +59,11 @@ public class SearchFromController {
         loadAllOrders();
     }
     private void setvaluesFactory() {
-        columnOrderId.setCellValueFactory(new PropertyValueFactory<>("oid"));
+        columnOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-        columnCustId.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        columnCustId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         columnItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
-        columnQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
+        columnQty.setCellValueFactory(new PropertyValueFactory<>("qtyOnHand"));
     }
     private void loadAllOrders() {
         tblOrder.getItems().clear();

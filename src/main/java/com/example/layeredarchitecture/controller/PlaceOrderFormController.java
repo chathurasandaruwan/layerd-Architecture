@@ -340,31 +340,21 @@ public class PlaceOrderFormController {
             connection.setAutoCommit(true);
             return true;*/
 
-
-
-
         Connection connection = null;
         try {
             connection=DBConnection.getDbConnection().getConnection();
 
-
             //Check order id already exist or not
-
-
             boolean b1 = orderDAO.exist(orderId);
+
             /*if order id already exist*/
             if (b1) {
                 return false;
             }
-
-
             connection.setAutoCommit(false);
-
 
             //Save the Order to the order table
             boolean b2 = orderDAO.save(new OrderDTO(orderId, orderDate, customerId));
-
-
             if (!b2) {
                 connection.rollback();
                 connection.setAutoCommit(true);
@@ -372,8 +362,6 @@ public class PlaceOrderFormController {
             }
 
             // add data to the Order Details table
-
-
             for (OrderDetailDTO detail : orderDetails) {
                 boolean b3 = orderDetailDAO.save(detail);
                 if (!b3) {
@@ -382,16 +370,12 @@ public class PlaceOrderFormController {
                     return false;
                 }
 
-
                 //Search & Update Item
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-
                 //update item
                 boolean b = itemDAO.update(new ItemDTO(item.getCode(), item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
-
-
                 if (!b) {
                     connection.rollback();
                     connection.setAutoCommit(true);
@@ -399,12 +383,9 @@ public class PlaceOrderFormController {
                 }
             }
 
-
             connection.commit();
             connection.setAutoCommit(true);
             return true;
-
-
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
