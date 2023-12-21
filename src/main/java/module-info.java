@@ -12,4 +12,8 @@ module com.example.layeredarchitecture {
     exports com.example.layeredarchitecture.controller;
     exports com.example.layeredarchitecture.dao;
     opens com.example.layeredarchitecture.dao to javafx.fxml;
+    exports com.example.layeredarchitecture.dao.custom;
+    opens com.example.layeredarchitecture.dao.custom to javafx.fxml;
+    exports com.example.layeredarchitecture.dao.custom.impl;
+    opens com.example.layeredarchitecture.dao.custom.impl to javafx.fxml;
 }
