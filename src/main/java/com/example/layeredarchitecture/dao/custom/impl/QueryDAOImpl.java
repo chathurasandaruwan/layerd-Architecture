@@ -12,7 +12,7 @@ public class QueryDAOImpl implements QueryDAO {
 
 
     @Override
-    public ArrayList<SearchOrderDTO> getAll() throws SQLException, ClassNotFoundException {
+    public ArrayList<SearchOrderDTO> getAllOrder() throws SQLException, ClassNotFoundException {
         ResultSet rst = SQLUtil.execute("SELECT o.oid as oid,date,customerID,itemCode,qty from Orders o join OrderDetails d on o.oid = d.oid");
         ArrayList<SearchOrderDTO> getAllOrders = new ArrayList<>();
         while (rst.next()){

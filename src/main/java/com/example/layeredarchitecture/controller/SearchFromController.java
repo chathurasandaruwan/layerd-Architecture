@@ -1,7 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.dao.custom.QueryDAO;
-import com.example.layeredarchitecture.dao.custom.impl.QueryDAOImpl;
+import com.example.layeredarchitecture.bo.OrderHistoryBO;
+import com.example.layeredarchitecture.bo.OrderHistoryBoImpl;
 import com.example.layeredarchitecture.model.SearchOrderDTO;
 import com.example.layeredarchitecture.view.tdm.SearchOrderTM;
 import javafx.application.Platform;
@@ -43,7 +43,8 @@ public class SearchFromController {
 
     @FXML
     private TableColumn<?, ?> columnQty;
-    QueryDAO queryDAO = new QueryDAOImpl();
+
+    OrderHistoryBO orderHistoryBO = new OrderHistoryBoImpl();
     @FXML
     void navigateToHome(MouseEvent event) throws IOException {
         URL resource = this.getClass().getResource("/com/example/layeredarchitecture/main-form.fxml");
@@ -69,7 +70,7 @@ public class SearchFromController {
         tblOrder.getItems().clear();
         /*Get all orders*/
         try {
-            ArrayList<SearchOrderDTO> allOrders = queryDAO.getAll();
+            ArrayList<SearchOrderDTO> allOrders = orderHistoryBO.getAllOrderHistory();
             for (SearchOrderDTO dto : allOrders) {
                 tblOrder.getItems().add(new SearchOrderTM(dto.getOrderId(),dto.getDate(),dto.getCustomerId(), dto.getItemCode(),dto.getQtyOnHand()));
             }

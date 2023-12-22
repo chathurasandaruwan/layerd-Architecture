@@ -7,5 +7,5 @@ import java.util.ArrayList;
 
 public interface QueryDAO {
 
-    ArrayList<SearchOrderDTO> getAll() throws SQLException, ClassNotFoundException;
+    ArrayList<SearchOrderDTO> getAllOrder() throws SQLException, ClassNotFoundException;
 }
