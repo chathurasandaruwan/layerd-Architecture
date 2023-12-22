@@ -1,7 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
-import com.example.layeredarchitecture.bo.OrderHistoryBO;
-import com.example.layeredarchitecture.bo.OrderHistoryBoImpl;
+import com.example.layeredarchitecture.bo.custom.OrderHistoryBO;
+import com.example.layeredarchitecture.bo.custom.impl.OrderHistoryBoImpl;
 import com.example.layeredarchitecture.model.SearchOrderDTO;
 import com.example.layeredarchitecture.view.tdm.SearchOrderTM;
 import javafx.application.Platform;
