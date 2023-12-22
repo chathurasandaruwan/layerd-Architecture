@@ -1,5 +1,6 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.bo.BOFactory;
 import com.example.layeredarchitecture.bo.custom.OrderHistoryBO;
 import com.example.layeredarchitecture.bo.custom.impl.OrderHistoryBoImpl;
 import com.example.layeredarchitecture.model.SearchOrderDTO;
@@ -44,7 +45,7 @@ public class SearchFromController {
     @FXML
     private TableColumn<?, ?> columnQty;
 
-    OrderHistoryBO orderHistoryBO = new OrderHistoryBoImpl();
+    OrderHistoryBO orderHistoryBO = (OrderHistoryBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.ORDER_HISTORY);
     @FXML
     void navigateToHome(MouseEvent event) throws IOException {
         URL resource = this.getClass().getResource("/com/example/layeredarchitecture/main-form.fxml");
